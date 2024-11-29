@@ -15,22 +15,19 @@ VSCode에서 PHP 파일 내의 SCSS/SASS 구문에 대한 문법 강조 기능�
 3. VS Code 재시작
 
 ## 사용법
+PHP 파일 내부에 SCSS/SASS를 작성할 때는 VS Code 설정에 다음 구문을 추가해줘야 문법 강조가 적용된다.
 
-PHP 파일 내에서 SCSS/SASS를 작성할 때 자동으로 문법 강조가 적용됩니다.
-
-예시:
-```php
-<style lang="scss">
-$primary-color: #333;
-
-.container {
-    background-color: $primary-color;
-
-    &:hover {
-        background-color: lighten($primary-color, 10%);
-    }
+```json
+"files.associations": {
+    "*.css.php": "php-css-scss",
 }
-</style>
+```
+
+- emmet을 위해 아래 설정을 추가하는 것을 추천.
+```json
+"emmet.includeLanguages": {
+    "php-css-scss": "css"
+}
 ```
 
 ## 릴리즈 노트
