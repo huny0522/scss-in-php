@@ -1,0 +1,31 @@
+{
+  "scopeName": "source.php-css-scss",
+  "patterns": [
+    {
+      "begin": "<\\?php",
+      "end": "\\?>",
+      "name": "source.php",
+      "contentName": "source.php",
+      "patterns": [
+        {
+          "include": "source.php"
+        }
+      ]
+    },
+    {
+      "begin": "<\\?=",
+      "end": "\\?>",
+      "name": "source.php",
+      "contentName": "source.php",
+      "patterns": [
+        {
+          "include": "source.php"
+        }
+      ]
+    },
+    {
+      "include": "source.css.scss"
+    }
+  ],
+  "repository": {}
+}
