@@ -19,47 +19,22 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from SCSS IN PHP!');
 	});
 
-	// Register a type event handler
-	const typeHandler = vscode.workspace.onDidChangeTextDocument((event) => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) return;
-
-		const changes = event.contentChanges;
-		if (changes.length === 0) return;
-
-		const change = changes[0];
-		if (change.text === ';') {
-			const position = editor.selection.active;
-			const lineText = editor.document.lineAt(position.line).text;
-
-			// 현재 커서 위치에 세미콜론이 있는지 확인
-			if (lineText.charAt(position.character - 1) === ';') {
-				editor.edit(editBuilder => {
-					// 방금 입력된 세미콜론 제거
-					editBuilder.delete(new vscode.Range(
-						position.translate(0, -1),
-						position
-					));
-				}).then(() => {
-					// 커서를 다음 위치로 이동
-					const newPosition = position.with(position.line, position.character);
-					editor.selection = new vscode.Selection(newPosition, newPosition);
-				});
-			}
-		}
-	});
-
 	// 키 입력 이벤트 핸들러 등록
 	const semicolonHandler = vscode.commands.registerCommand('type', args => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return;
 
+		// PHP CSS/SCSS 파일인 경우에만 처리
+		if (editor.document.languageId !== 'php-css-scss') {
+			return vscode.commands.executeCommand('default:type', args);
+		}
+
 		if (args.text === ';') {
 			const position = editor.selection.active;
 			const lineText = editor.document.lineAt(position.line).text;
 
-			// 현재 커서 위치에 세미콜론이 있는지 확인
-			if (lineText.charAt(position.character) === ';') {
+			// 현재 커서 다음 위치에 세미콜론이 있는 경우에만 건너뛰기
+			if (position.character < lineText.length && lineText.charAt(position.character) === ';') {
 				// 커서만 이동
 				const newPosition = position.with(position.line, position.character + 1);
 				editor.selection = new vscode.Selection(newPosition, newPosition);
@@ -70,7 +45,6 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
-	context.subscriptions.push(typeHandler);
 	context.subscriptions.push(semicolonHandler);
 }
 

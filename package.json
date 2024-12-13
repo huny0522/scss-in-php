@@ -2,7 +2,7 @@
   "name": "scss-in-php",
   "displayName": "SCSS IN PHP",
   "description": "Support for PHP tags in JavaScript and CSS/SCSS files",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
