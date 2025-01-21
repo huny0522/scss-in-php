@@ -24,8 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return;
 
-		// PHP CSS/SCSS 파일인 경우에만 처리
-		if (editor.document.languageId !== 'php-css-scss') {
+		// PHP-CSS-SCSS 또는 HTML 파일인 경우에만 처리
+		if (editor.document.languageId !== 'php-css-scss' && editor.document.languageId !== 'html' && editor.document.languageId !== 'php') {
 			return vscode.commands.executeCommand('default:type', args);
 		}
 
