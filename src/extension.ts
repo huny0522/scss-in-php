@@ -19,13 +19,16 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from SCSS IN PHP!');
 	});
 
-	// 키 입력 이벤트 핸들러 등록
+	// 세미콜론 핸들러를 즉시 등록
 	const semicolonHandler = vscode.commands.registerCommand('type', args => {
 		const editor = vscode.window.activeTextEditor;
-		if (!editor) return;
+		if (!editor) {
+			return vscode.commands.executeCommand('default:type', args);
+		}
 
-		// PHP-CSS-SCSS 또는 HTML 파일인 경우에만 처리
-		if (editor.document.languageId !== 'php-css-scss' && editor.document.languageId !== 'html' && editor.document.languageId !== 'php') {
+		// PHP-CSS-SCSS, HTML, PHP 파일인 경우에만 처리
+		const supportedLanguages = ['php-css-scss', 'html', 'php'];
+		if (!supportedLanguages.includes(editor.document.languageId)) {
 			return vscode.commands.executeCommand('default:type', args);
 		}
 
@@ -35,10 +38,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// 현재 커서 다음 위치에 세미콜론이 있는 경우에만 건너뛰기
 			if (position.character < lineText.length && lineText.charAt(position.character) === ';') {
-				// 커서만 이동
 				const newPosition = position.with(position.line, position.character + 1);
 				editor.selection = new vscode.Selection(newPosition, newPosition);
-				return null; // 세미콜론 입력 방지
+				return null;
 			}
 		}
 		return vscode.commands.executeCommand('default:type', args);
