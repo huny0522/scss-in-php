@@ -19,35 +19,41 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from SCSS IN PHP!');
 	});
 
-	// 세미콜론 핸들러를 즉시 등록
-	const semicolonHandler = vscode.commands.registerCommand('type', args => {
+	// 세미콜론 자동 건너뛰기 기능 구현
+	const skipSemicolonCommand = vscode.commands.registerCommand('scss-in-php.skipSemicolon', () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
-			return vscode.commands.executeCommand('default:type', args);
+			return;
 		}
 
-		// PHP-CSS-SCSS, HTML, PHP 파일인 경우에만 처리
+		// 지원되는 언어인지 확인
 		const supportedLanguages = ['php-css-scss', 'html', 'php'];
 		if (!supportedLanguages.includes(editor.document.languageId)) {
-			return vscode.commands.executeCommand('default:type', args);
+			// 지원되지 않는 언어면 일반 세미콜론 입력
+			editor.edit(editBuilder => {
+				editBuilder.insert(editor.selection.active, ';');
+			});
+			return;
 		}
 
-		if (args.text === ';') {
-			const position = editor.selection.active;
-			const lineText = editor.document.lineAt(position.line).text;
+		const position = editor.selection.active;
+		const lineText = editor.document.lineAt(position.line).text;
 
-			// 현재 커서 다음 위치에 세미콜론이 있는 경우에만 건너뛰기
-			if (position.character < lineText.length && lineText.charAt(position.character) === ';') {
-				const newPosition = position.with(position.line, position.character + 1);
-				editor.selection = new vscode.Selection(newPosition, newPosition);
-				return null;
-			}
+		// 현재 커서 위치에 세미콜론이 이미 있는지 확인
+		if (position.character < lineText.length && lineText.charAt(position.character) === ';') {
+			// 세미콜론이 있으면 건너뛰기
+			const newPosition = position.with(position.line, position.character + 1);
+			editor.selection = new vscode.Selection(newPosition, newPosition);
+		} else {
+			// 세미콜론이 없으면 입력
+			editor.edit(editBuilder => {
+				editBuilder.insert(position, ';');
+			});
 		}
-		return vscode.commands.executeCommand('default:type', args);
 	});
 
 	context.subscriptions.push(disposable);
-	context.subscriptions.push(semicolonHandler);
+	context.subscriptions.push(skipSemicolonCommand);
 }
 
 // This method is called when your extension is deactivated

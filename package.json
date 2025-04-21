@@ -2,7 +2,7 @@
   "name": "scss-in-php",
   "displayName": "SCSS IN PHP",
   "description": "Support for PHP tags in JavaScript and CSS/SCSS files",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
@@ -37,6 +37,19 @@
           "source.php": "php",
           "source.css.scss": "scss"
         }
+      }
+    ],
+    "commands": [
+      {
+        "command": "scss-in-php.skipSemicolon",
+        "title": "Skip or Insert Semicolon"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "scss-in-php.skipSemicolon",
+        "key": ";",
+        "when": "editorTextFocus && (editorLangId == 'php-css-scss' || editorLangId == 'html' || editorLangId == 'php')"
       }
     ]
   },
